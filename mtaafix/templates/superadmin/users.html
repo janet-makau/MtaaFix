@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon, empty_state with context %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-3">
+  <div>
+    <h1 class="page-title">Users</h1>
+    <p class="text-muted mb-0">Residents register themselves. Staff accounts are created here.</p>
+  </div>
+  <a class="btn btn-mtaa btn-block-sm" href="{{ url_for('superadmin.create_staff') }}">{{ icon('plus') }} Create staff account</a>
+</div>
+
+<nav class="d-flex flex-wrap gap-2 mb-3" aria-label="Show users by role">
+  <a class="btn btn-sm {{ 'btn-mtaa' if not role_filter else 'btn-quiet' }}" href="{{ url_for('superadmin.users') }}" {% if not role_filter %}aria-current="true"{% endif %}>Everyone</a>
+  {% for key, label in Role.LABELS.items() %}
+    <a class="btn btn-sm {{ 'btn-mtaa' if role_filter == key else 'btn-quiet' }}" href="{{ url_for('superadmin.users', role=key) }}" {% if role_filter == key %}aria-current="true"{% endif %}>{{ label }}</a>
+  {% endfor %}
+</nav>
+
+{% if users %}
+<div class="table-wrap"><div class="table-responsive">
+<table class="table align-middle">
+  <caption class="visually-hidden">User accounts</caption>
+  <thead><tr><th scope="col">Name</th><th scope="col" class="d-none d-md-table-cell">Email</th><th scope="col">Role</th><th scope="col">Account</th><th scope="col" class="text-end">Action</th></tr></thead>
+  <tbody>
+  {% for user in users %}
+    {% set is_me = user.id == current_user.id %}
+    <tr class="{{ 'text-muted' if not user.active }}">
+      <td><strong>{{ user.full_name }}</strong>{% if is_me %} <span class="tag-joined">You</span>{% endif %}
+        <div class="small text-muted d-md-none text-break">{{ user.email }}</div></td>
+      <td class="text-break d-none d-md-table-cell">{{ user.email }}</td>
+      <td>
+        {% if is_me %}
+          {{ user.role_label }}
+        {% else %}
+          <form class="d-flex gap-1" method="post" action="{{ url_for('superadmin.change_role', user_id=user.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <select class="form-select form-select-sm" name="role" aria-label="Role for {{ user.full_name }}">
+              {% for key, label in Role.LABELS.items() %}
+                <option value="{{ key }}" {% if user.role == key %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn btn-sm btn-quiet" type="submit">Save<span class="visually-hidden"> role for {{ user.full_name }}</span></button>
+          </form>
+        {% endif %}
+      </td>
+      <td><span class="status {{ 'status-resolved' if user.active else 'status-closed' }}">{{ "Active" if user.active else "Deactivated" }}</span></td>
+      <td class="text-end">
+        {% if not is_me %}
+        <form method="post" action="{{ url_for('superadmin.toggle_active', user_id=user.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-sm {{ 'btn-danger-quiet' if user.active else 'btn-quiet' }}" type="submit">
+            {{ "Deactivate" if user.active else "Reactivate" }}<span class="visually-hidden"> {{ user.full_name }}</span></button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% else %}
+  {{ empty_state("No users with this role", "Choose another role above, or create a staff account.") }}
+{% endif %}
+{% endblock %}

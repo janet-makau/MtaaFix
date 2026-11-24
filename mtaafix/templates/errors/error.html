@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ message }}{% endblock %}
+{% block content %}
+<div class="auth text-center py-4">
+  <p class="ref fs-1 mb-1 text-muted">{{ code }}</p>
+  <h1 class="page-title">{{ message }}</h1>
+  {% if code == 404 %}<p class="page-lead mx-auto">Check the address, or go back to your MtaaFix page.</p>{% endif %}
+  <a class="btn btn-mtaa" href="{{ url_for('main.dashboard') }}">Go to MtaaFix</a>
+</div>
+{% endblock %}

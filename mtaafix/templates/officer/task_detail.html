@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import field, report_summary, report_details, history, priority_badge, back, leaflet_head, leaflet_scripts with context %}
+{% block title %}Task {{ report.reference }}{% endblock %}
+{% block head %}{{ leaflet_head() }}{% endblock %}
+{% block content %}
+{{ back(url_for('officer.my_tasks'), 'My tasks') }}
+{{ report_summary(report) }}
+<p class="mt-3 mb-0">{{ priority_badge(report) }}</p>
+
+{# On site the officer's job is to record progress, so the update comes before the details. #}
+{% if form.status.choices %}
+  <section class="panel mt-3" aria-labelledby="update-title">
+    <h2 class="panel-title" id="update-title">Update progress</h2>
+    <form method="post" action="{{ url_for('officer.update_status', report_id=report.id) }}" data-submit-once>
+      {{ form.hidden_tag() }}
+      <div class="row g-3">
+        <div class="col-md-4">{{ field(form.status) }}</div>
+        <div class="col-md-8">{{ field(form.note, help="What was done, or what is still needed. The resident sees this note.", attrs={'rows': 2}) }}</div>
+      </div>
+      {{ form.submit(class_="btn btn-mtaa btn-block-sm") }}
+    </form>
+  </section>
+{% endif %}
+
+{{ report_details(report) }}
+{{ history(report) }}
+{% endblock %}
+{% block scripts %}{{ leaflet_scripts() }}{% endblock %}

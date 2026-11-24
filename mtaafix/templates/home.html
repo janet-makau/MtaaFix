@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import icon with context %}
+{% block title %}Report problems in your area{% endblock %}
+{% block content %}
+<section class="hero row align-items-center g-5">
+  <div class="col-lg-6">
+    <h1 class="hero-title">Seen a pothole? Report it. Follow it until it is fixed.</h1>
+    <p class="hero-lead">Broken streetlights, blocked drains, burst pipes and uncollected rubbish in your mtaa.
+      Describe it, mark it on the map, and get an email each time the authority moves it forward.</p>
+    <div class="d-flex gap-2 flex-wrap mt-4">
+      {% if current_user.is_authenticated %}
+        <a class="btn btn-mtaa btn-lg" href="{{ url_for('main.dashboard') }}">Open MtaaFix</a>
+      {% else %}
+        <a class="btn btn-mtaa btn-lg" href="{{ url_for('auth.register') }}">Create a free account</a>
+        <a class="btn btn-quiet btn-lg" href="{{ url_for('auth.login') }}">Log in</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    {# A sample report, drawn with the same road the residents see on their own reports. #}
+    <figure class="demo-card mb-0" aria-label="Example of a report on MtaaFix">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <span class="ref fs-5">MF-000128</span>
+        <span class="status status-in_progress">In Progress</span>
+      </div>
+      <p class="description mt-2 mb-1">Deep pothole at the matatu stage outside the market. Vehicles swerve into the walkway to avoid it.</p>
+      <p class="small text-muted mb-3">Roads, reported 3 days ago</p>
+      <ol class="road" aria-label="Progress: In Progress">
+        <li class="road-stop is-done"><span class="road-dot">{{ icon('check') }}</span><span class="road-label">Submitted</span></li>
+        <li class="road-stop is-done"><span class="road-dot">{{ icon('check') }}</span><span class="road-label">Assigned</span></li>
+        <li class="road-stop is-current" aria-current="step"><span class="road-dot"></span><span class="road-label">In Progress</span></li>
+        <li class="road-stop"><span class="road-dot"></span><span class="road-label">Resolved</span></li>
+      </ol>
+      <figcaption class="small text-muted mt-3 mb-0">Latest update: "Crew on site, patching today."</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="mt-4 pt-4 border-top" aria-labelledby="how-title">
+  <h2 class="h3 mb-3" id="how-title">How it works</h2>
+  <ol class="how">
+    <li><span class="step-num">1</span><div><h3>Report it</h3><p>Describe the problem, add a photo and drop a pin on the map. MtaaFix suggests a category and checks if a neighbour already reported it.</p></div></li>
+    <li><span class="step-num">2</span><div><h3>The authority acts</h3><p>The authority sets the priority and sends a field officer, who records progress on site.</p></div></li>
+    <li><span class="step-num">3</span><div><h3>You are kept informed</h3><p>You get an email at every step, and the full history is always on your report.</p></div></li>
+  </ol>
+</section>
+{% endblock %}

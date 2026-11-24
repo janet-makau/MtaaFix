@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import report_summary, report_details, history, back, leaflet_head, leaflet_scripts with context %}
+{% block title %}Report {{ report.reference }}{% endblock %}
+{% block head %}{{ leaflet_head() }}{% endblock %}
+{% block content %}
+{{ back(url_for('resident.my_reports'), 'My reports') }}
+{{ report_summary(report) }}
+{{ report_details(report) }}
+{{ history(report, show_staff=False) }}
+{% endblock %}
+{% block scripts %}{{ leaflet_scripts() }}{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import status_badge, priority_badge, empty_state with context %}
+{% block title %}My tasks{% endblock %}
+{% block content %}
+<div class="narrow">
+  <h1 class="page-title">My tasks</h1>
+  <p class="page-lead">Open reports assigned to you, most urgent first. Open one to see where it is and update its progress.</p>
+  {% if reports %}
+    <ul class="report-list">
+      {% for report in reports %}
+        <li>
+          <a class="report-item" href="{{ url_for('officer.task_detail', report_id=report.id) }}">
+            <div class="report-item-top">
+              <span class="report-item-title"><span class="ref">{{ report.reference }}</span><span class="cat">{{ report.category.name }}</span></span>
+              <span class="badges">{{ priority_badge(report) }}{{ status_badge(report) }}</span>
+            </div>
+            <p class="report-item-desc">{{ report.description }}</p>
+            <div class="report-item-meta">Reported {{ report.created_at|localtime }}</div>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {{ empty_state("No open tasks", "When the authority assigns a report to you, it will appear here.") }}
+  {% endif %}
+</div>
+{% endblock %}

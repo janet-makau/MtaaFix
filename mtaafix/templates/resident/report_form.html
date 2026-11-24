@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import field, icon, back, leaflet_head, leaflet_scripts with context %}
+{% block title %}Report a problem{% endblock %}
+{% block head %}{{ leaflet_head() }}{% endblock %}
+{% block content %}
+<div class="narrow">
+  {{ back(url_for('resident.my_reports'), 'My reports') }}
+  <h1 class="page-title">Report a problem</h1>
+  <p class="page-lead">Three short steps. You will get a reference number and an email at every update.</p>
+
+  <form method="post" enctype="multipart/form-data" novalidate data-submit-once id="report-form"
+        data-ai-category-url="{{ url_for('api.suggest_category') }}"
+        data-ai-duplicate-url="{{ url_for('api.check_duplicate') }}"
+        data-ai-join-url="{{ url_for('api.join', report_id=0) }}">
+    {{ form.hidden_tag() }}
+    <div class="panel">
+
+      <section class="step" aria-labelledby="step-1">
+        <span class="step-num" aria-hidden="true">1</span>
+        <div>
+          <h2 class="step-title" id="step-1">What is the problem?</h2>
+          {{ field(form.description,
+                   help="Say what you see and a landmark nearby. Leave out names, phone numbers and other personal details.",
+                   attrs={'rows': 4, 'maxlength': 2000, 'data-count-min': 10}) }}
+          {{ field(form.category) }}
+          <div id="ai-category-note" class="d-none mt-n2 mb-3" aria-live="polite">
+            <span class="ai-chip">{{ icon('spark') }}AI suggested</span>
+            <span class="small text-muted ms-1">Change it if it is wrong.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="step-2">
+        <span class="step-num" aria-hidden="true">2</span>
+        <div>
+          <h2 class="step-title" id="step-2">Where is it?</h2>
+          <p class="text-muted mb-2" id="map-help">Tap the map where the problem is, or use your current location. Drag the pin to adjust it.</p>
+          <div id="map" class="map {{ 'is-invalid' if form.latitude.errors }}" data-mode="pick"
+               role="application" aria-label="Map. Tap to place the pin." aria-describedby="map-help"
+               data-lat="{{ map_cfg.lat }}" data-lng="{{ map_cfg.lng }}" data-zoom="{{ map_cfg.zoom }}"
+               data-lat-input="{{ form.latitude.id }}" data-lng-input="{{ form.longitude.id }}"
+               data-status="pin-status"></div>
+          <div class="map-tools">
+            <span id="pin-status" class="pin-status" aria-live="polite">No pin yet</span>
+            <button type="button" class="btn btn-quiet btn-sm" id="locate-me" hidden>{{ icon('locate') }} Use my location</button>
+          </div>
+          {% for error in form.latitude.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+        </div>
+      </section>
+
+      <section class="step" aria-labelledby="step-3">
+        <span class="step-num" aria-hidden="true">3</span>
+        <div>
+          <h2 class="step-title" id="step-3">Add a photo</h2>
+          {{ field(form.photo, help="JPEG or PNG, up to 5 MB. On a phone you can take one now.",
+                   attrs={'accept': 'image/jpeg,image/png', 'data-preview': 'photo-preview'}) }}
+          <div id="photo-preview" class="photo-preview" hidden aria-live="polite"></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="d-flex flex-wrap align-items-center gap-3 mt-4">
+      {{ form.submit(class_="btn btn-mtaa btn-lg btn-block-sm") }}
+      <a class="fw-bold" href="{{ url_for('resident.my_reports') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{# Duplicate warning (REQ-10, REQ-11): shown by report_ai.js before the form is sent. #}
+<div class="modal fade" id="duplicate-modal" tabindex="-1" aria-labelledby="duplicate-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title h4" id="duplicate-title">Is this the same problem?</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <p class="mb-3"><span class="ai-chip">{{ icon('spark') }}AI suggestion</span>
+        <span class="ms-1">A neighbour already reported something similar nearby.</span></p>
+      <div class="panel p-3">
+        <div class="d-flex justify-content-between flex-wrap gap-2">
+          <span class="ref fs-5" id="dup-reference"></span>
+          <span class="status status-submitted" id="dup-status"></span>
+        </div>
+        <div class="small text-muted"><span id="dup-category"></span>, <span id="dup-distance"></span></div>
+        <p class="mb-0 mt-2" id="dup-description"></p>
+      </div>
+      <p class="mt-3 mb-0">If it is the same problem, join that report. You will get its updates, and the authority sees one report instead of two.</p>
+      <div class="alert alert-danger mt-3 mb-0 d-none" id="dup-error">Could not join the report. Check your connection and try again.</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-quiet" id="dup-new">No, send my report</button>
+      <button type="button" class="btn btn-mtaa" id="dup-join">Yes, join this report</button>
+    </div>
+  </div></div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{ leaflet_scripts() }}
+<script src="{{ url_for('static', filename='js/report_ai.js') }}"></script>
+{% endblock %}

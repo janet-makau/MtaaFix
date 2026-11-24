@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import field, icon, back, report_summary, report_details, history, priority_badge, leaflet_head, leaflet_scripts with context %}
+{% block title %}Review {{ report.reference }}{% endblock %}
+{% block head %}{{ leaflet_head() }}{% endblock %}
+{% block content %}
+{{ back(url_for('authority.dashboard'), 'Reports') }}
+{{ report_summary(report) }}
+{% if is_stale %}
+  <div class="alert alert-warning mt-3 mb-0">This report has not moved for {{ stale_days }} days or more. Check with the field officer.</div>
+{% endif %}
+
+<div class="row g-4 mt-0">
+  <div class="col-lg-7">
+    {{ report_details(report, stacked=True) }}
+    {{ history(report) }}
+  </div>
+
+  <div class="col-lg-5">
+    <div class="sticky-lg">
+      {# Priority (REQ-12, REQ-16): the AI suggestion is shown, the administrator decides. #}
+      <section class="panel decision" aria-labelledby="priority-title">
+        <h2 id="priority-title">Priority {{ priority_badge(report) }}</h2>
+        {% if priority_suggestion %}
+          <div class="ai-box mb-3">
+            <span class="ai-chip">{{ icon('spark') }}AI suggestion</span>
+            <strong class="ms-1">{{ Priority.LABELS.get(priority_suggestion.suggested_value, priority_suggestion.suggested_value) }}</strong>
+            {% if priority_suggestion.reasons %}
+              <ul>{% for reason in priority_suggestion.reasons.splitlines() %}<li>{{ reason }}</li>{% endfor %}</ul>
+            {% endif %}
+            <div class="small text-muted">You decide. Keep it or choose another priority.</div>
+          </div>
+        {% else %}
+          <p class="small text-muted">No AI suggestion for this report. Choose the priority yourself.</p>
+        {% endif %}
+        <form method="post" action="{{ url_for('authority.set_priority', report_id=report.id) }}" class="d-flex gap-2 align-items-end flex-wrap">
+          {{ priority_form.hidden_tag() }}
+          <div class="flex-grow-1">{{ field(priority_form.priority) }}</div>
+          <div class="mb-3">{{ priority_form.submit(class_="btn btn-quiet") }}</div>
+        </form>
+      </section>
+
+      {# Assign (REQ-17) or reassign (REQ-25) #}
+      {% if report.status in [Status.SUBMITTED, Status.ASSIGNED, Status.IN_PROGRESS] %}
+        {% set reassigning = report.status != Status.SUBMITTED %}
+        <section class="panel decision" aria-labelledby="assign-title">
+          <h2 id="assign-title">{{ "Reassign" if reassigning else "Send a field officer" }}</h2>
+          {% if reassigning %}<p class="small text-muted mb-2">Now with {{ report.assigned_officer.full_name if report.assigned_officer else "nobody" }}.</p>{% endif %}
+          {% if assign_form.officer.choices %}
+            <form method="post" action="{{ url_for('authority.assign', report_id=report.id) }}" data-submit-once>
+              {{ assign_form.hidden_tag() }}
+              {{ field(assign_form.officer) }}
+              {{ field(assign_form.note, help="Required when reassigning: say why." if reassigning else "Optional instructions for the officer.", attrs={'rows': 2}) }}
+              <button class="btn btn-mtaa" type="submit">{{ "Reassign" if reassigning else "Assign" }}</button>
+            </form>
+          {% else %}
+            <p class="small text-muted mb-0">There are no other active field officers. The Super Administrator can create one.</p>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {# Status update (REQ-19) #}
+      {% if status_form.status.choices %}
+        <section class="panel decision" aria-labelledby="status-title">
+          <h2 id="status-title">Update progress</h2>
+          <form method="post" action="{{ url_for('authority.update_status', report_id=report.id) }}" data-submit-once>
+            {{ status_form.hidden_tag() }}
+            {{ field(status_form.status) }}
+            {{ field(status_form.note, attrs={'rows': 2}) }}
+            {{ status_form.submit(class_="btn btn-mtaa") }}
+          </form>
+        </section>
+      {% endif %}
+
+      {# Reopen (REQ-28) #}
+      {% if report.status in [Status.RESOLVED, Status.CLOSED] %}
+        <section class="panel decision" aria-labelledby="reopen-title">
+          <h2 id="reopen-title">Reopen</h2>
+          <p class="small text-muted">Use this if the problem has come back. The report returns to Submitted.</p>
+          <form method="post" action="{{ url_for('authority.reopen', report_id=report.id) }}" data-submit-once>
+            {{ reopen_form.hidden_tag() }}
+            {{ field(reopen_form.note, attrs={'rows': 2}) }}
+            {{ reopen_form.submit(class_="btn btn-quiet") }}
+          </form>
+        </section>
+      {% endif %}
+
+      {# Close (REQ-27): last, and collapsed, so it is not chosen by accident. #}
+      {% if report.is_open %}
+        <section class="panel decision danger" aria-labelledby="close-title">
+          <h2 id="close-title">
+            <button class="btn btn-link p-0 fw-bold text-danger text-decoration-none" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#close-body" aria-expanded="{{ 'true' if close_form.errors else 'false' }}" aria-controls="close-body">
+              Close without fixing</button>
+          </h2>
+          <div id="close-body" class="collapse {{ 'show' if close_form.errors }}">
+            <p class="small text-muted">For duplicates, reports that are not valid, or problems the authority cannot fix. The residents are told why.</p>
+            <form method="post" action="{{ url_for('authority.close', report_id=report.id) }}" data-submit-once>
+              {{ close_form.hidden_tag() }}
+              {{ field(close_form.reason) }}
+              {{ field(close_form.original_reference, help="Only for duplicates, for example MF-000012.") }}
+              {{ field(close_form.note, attrs={'rows': 2}) }}
+              {{ close_form.submit(class_="btn btn-danger-quiet") }}
+            </form>
+          </div>
+        </section>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}{{ leaflet_scripts() }}{% endblock %}

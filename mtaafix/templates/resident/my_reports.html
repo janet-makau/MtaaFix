@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import status_badge, status_road, empty_state, icon with context %}
+{% block title %}My reports{% endblock %}
+{% block content %}
+<div class="narrow">
+  <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+    <div>
+      <h1 class="page-title">My reports</h1>
+      <p class="text-muted mb-0">Reports you sent, and reports you joined because a neighbour sent them first.</p>
+    </div>
+    <a class="btn btn-mtaa btn-block-sm" href="{{ url_for('resident.new_report') }}">{{ icon('plus') }} Report a problem</a>
+  </div>
+
+  {% if reports %}
+    <ul class="report-list">
+      {% for report in reports %}
+        <li>
+          <a class="report-item" href="{{ url_for('resident.report_detail', report_id=report.id) }}">
+            <div class="report-item-top">
+              <span class="report-item-title"><span class="ref">{{ report.reference }}</span><span class="cat">{{ report.category.name }}</span></span>
+              {{ status_badge(report) }}
+            </div>
+            <p class="report-item-desc">{{ report.description }}</p>
+            <div class="report-item-meta">
+              Reported {{ report.created_at|localtime }}
+              {% if report.resident_id != current_user.id %}<span class="tag-joined">Joined</span>{% endif %}
+            </div>
+            {{ status_road(report, compact=True) }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {{ empty_state("No reports yet",
+                   "When you report a pothole, broken light or blocked drain, you can follow it here until it is fixed.",
+                   url_for('resident.new_report'), "Report your first problem") }}
+  {% endif %}
+</div>
+{% endblock %}

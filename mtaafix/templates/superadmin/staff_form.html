@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import field, back with context %}
+{% block title %}Create staff account{% endblock %}
+{% block content %}
+<div class="auth" style="max-width: 560px">
+  {{ back(url_for('superadmin.users'), 'Users') }}
+  <h1 class="page-title">Create a staff account</h1>
+  <p class="page-lead">For field officers and authority administrators. Residents register themselves.</p>
+  <div class="panel">
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ field(form.full_name, attrs={'autocomplete': 'off'}) }}
+      {{ field(form.email, attrs={'autocomplete': 'off'}) }}
+      {{ field(form.role) }}
+      {{ field(form.password, help="At least 8 characters. Give it to the staff member in person, not by email.", attrs={'autocomplete': 'new-password'}) }}
+      {{ form.submit(class_="btn btn-mtaa btn-block-sm") }}
+    </form>
+  </div>
+</div>
+{% endblock %}

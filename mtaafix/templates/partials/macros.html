@@ -1,0 +1,194 @@
+{# Reusable pieces used by many pages. #}
+
+{% macro icon(name, label=None) -%}
+  {# Small line icons drawn for MtaaFix. Decorative unless a label is given. #}
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" {% if label %}role="img" aria-label="{{ label }}"{% else %}aria-hidden="true"{% endif %} focusable="false">
+  {%- if name == 'pin' %}<path d="M12 21s-6.5-5.7-6.5-11a6.5 6.5 0 0 1 13 0c0 5.3-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>
+  {%- elif name == 'locate' %}<circle cx="12" cy="12" r="3.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7.5"/>
+  {%- elif name == 'camera' %}<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>
+  {%- elif name == 'check' %}<path d="M5 12.5l4.5 4.5L19 7.5"/>
+  {%- elif name == 'plus' %}<path d="M12 5v14M5 12h14"/>
+  {%- elif name == 'back' %}<path d="M15 5l-7 7 7 7"/>
+  {%- elif name == 'spark' %}<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>
+  {%- elif name == 'flag' %}<path d="M5 21V4h11l-2 4 2 4H5"/>
+  {%- elif name == 'phone' %}<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z"/>
+  {%- endif %}
+  </svg>
+{%- endmacro %}
+
+{% macro brand_mark() -%}
+  {# A map pin standing on a road with a dashed centre line. #}
+  <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+    <rect x="1" y="22" width="30" height="8" rx="4" fill="#3b423e"/>
+    <path d="M4 26h5M13 26h6M23 26h5" stroke="#f2c230" stroke-width="2" stroke-linecap="round"/>
+    <path d="M16 22s-7-6-7-11.5a7 7 0 0 1 14 0C23 16 16 22 16 22z" fill="#f2c230"/>
+    <circle cx="16" cy="10.5" r="2.6" fill="#0e4229"/>
+  </svg>
+{%- endmacro %}
+
+{% macro field(f, help=None, attrs={}) %}
+  {# A labelled field. Required fields get *, help and errors are linked to the input for screen readers. #}
+  {% set help_id = f.id ~ '-help' %}
+  {% set error_id = f.id ~ '-error' %}
+  {% set described = ([help_id] if help else []) + ([error_id] if f.errors else []) %}
+  {% set aria = {'aria-describedby': described|join(' ')} if described else {} %}
+  {% if f.errors %}{% set _ = aria.update({'aria-invalid': 'true'}) %}{% endif %}
+  {% set _ = aria.update(attrs) %}
+  <div class="mb-3">
+    {% if f.type == 'BooleanField' %}
+      <div class="form-check">
+        {{ f(class_="form-check-input", **aria) }} {{ f.label(class_="form-check-label") }}
+      </div>
+    {% else %}
+      <label class="form-label" for="{{ f.id }}">{{ f.label.text }}{% if f.flags.required %}<span class="req" aria-hidden="true">*</span>{% endif %}</label>
+      {% set css = "form-select" if f.type == "SelectField" else "form-control" %}
+      {{ f(class_=css ~ (" is-invalid" if f.errors else ""), **aria) }}
+      {% if help %}<div class="form-text" id="{{ help_id }}">{{ help }}</div>{% endif %}
+      {% if f.errors %}<div class="invalid-feedback d-block" id="{{ error_id }}">{{ f.errors|join(' ') }}</div>{% endif %}
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro status_badge(report) -%}
+  <span class="status status-{{ report.status }}">{{ report.status_label }}</span>
+{%- endmacro %}
+
+{% macro priority_badge(report) -%}
+  {% if report.priority %}
+    <span class="prio prio-{{ report.priority }}">{{ report.priority_label }} priority</span>
+  {% else %}
+    <span class="prio prio-none">Priority not set</span>
+  {% endif %}
+{%- endmacro %}
+
+{% macro status_road(report, compact=False) %}
+  {# The report's journey drawn as a road: Submitted -> Assigned -> In progress -> Resolved.
+     Closed reports show how far they got, then a note with the reason. #}
+  {% set stops = [Status.SUBMITTED, Status.ASSIGNED, Status.IN_PROGRESS, Status.RESOLVED] %}
+  {% set closed = report.status == Status.CLOSED %}
+  {% if closed %}
+    {% set reached = namespace(i=0) %}
+    {% for change in report.history %}{% if change.new_status in stops %}{% set reached.i = stops.index(change.new_status) %}{% endif %}{% endfor %}
+    {% set current = reached.i %}
+  {% else %}
+    {% set current = stops.index(report.status) %}
+  {% endif %}
+  <ol class="road {{ 'compact' if compact }} {{ 'is-closed' if closed }}" aria-label="Progress: {{ report.status_label }}">
+    {% for stop in stops %}
+      {% set state = 'is-done' if loop.index0 < current or (loop.index0 == current and (closed or stop == Status.RESOLVED)) else ('is-current' if loop.index0 == current else '') %}
+      <li class="road-stop {{ state }}" {% if state == 'is-current' %}aria-current="step"{% endif %}>
+        <span class="road-dot">{% if state == 'is-done' %}{{ icon('check') }}{% endif %}</span>
+        {% if compact %}
+          <span class="visually-hidden">{{ Status.LABELS[stop] }}{{ ' (done)' if state == 'is-done' }}{{ ' (now)' if state == 'is-current' }}</span>
+        {% else %}
+          <span class="road-label">{{ Status.LABELS[stop] }}
+            {% set last = namespace(when=None) %}
+            {% for change in report.history %}{% if change.new_status == stop %}{% set last.when = change.changed_at %}{% endif %}{% endfor %}
+            {% if last.when and state %}<span class="road-when">{{ last.when|localtime }}</span>{% endif %}
+          </span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+  {% if closed and not compact %}
+    {% set closing = report.history[-1] %}
+    <p class="closed-note"><strong>Closed without fixing.</strong> {{ closing.note or '' }}</p>
+  {% endif %}
+{% endmacro %}
+
+{% macro history(report, show_staff=True) %}
+  {# Status history (REQ-20). Residents do not see staff names (SRS 3.1.7). #}
+  <section class="panel mt-4" aria-labelledby="history-title">
+    <h2 class="panel-title" id="history-title">Status history</h2>
+    <ol class="timeline">
+      {% for change in report.history %}
+        <li>
+          <div class="timeline-head">
+            <span class="timeline-status">{{ change.new_status_label }}</span>
+            <span class="timeline-when">{{ change.changed_at|localtime }}</span>
+          </div>
+          {% if change.note %}<p class="timeline-note">{{ change.note }}</p>{% endif %}
+          {% if show_staff and change.changed_by %}<div class="timeline-by">By {{ change.changed_by.full_name }}, {{ change.changed_by.role_label }}</div>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+{% endmacro %}
+
+{% macro report_summary(report) %}
+  {# Heading area shared by the resident, officer and admin pages: reference, labels and the road. #}
+  <div class="report-head">
+    <h1 class="page-title mb-0"><span class="ref">{{ report.reference }}</span></h1>
+    <span class="badges">{{ status_badge(report) }}</span>
+  </div>
+  <div class="panel mt-3">{{ status_road(report) }}</div>
+{% endmacro %}
+
+{% macro report_details(report, stacked=False) %}
+  {# Description, category, photo and location. `stacked` puts the map under the description. #}
+  {% set col = 'col-12' if stacked else 'col-lg-6' %}
+  <div class="row g-4 mt-0">
+    <div class="{{ col }}">
+      <section class="panel h-100" aria-labelledby="problem-title">
+        <h2 class="panel-title" id="problem-title">The problem</h2>
+        <p class="description text-break">{{ report.description }}</p>
+        <dl class="facts">
+          <dt>Category</dt><dd>{{ report.category.name }}</dd>
+          <dt>Reported</dt><dd>{{ report.created_at|localtime }}</dd>
+          {% if report.duplicate_of %}<dt>Same as</dt><dd class="ref">{{ report.duplicate_of.reference }}</dd>{% endif %}
+        </dl>
+        {% if report.photo_url %}
+          <a href="{{ report.photo_url }}" target="_blank" rel="noopener" class="d-block mt-3">
+            <img src="{{ report.photo_url }}" alt="Photo of the problem sent with {{ report.reference }}" class="report-photo">
+          </a>
+        {% endif %}
+      </section>
+    </div>
+    <div class="{{ col }}">
+      <section class="panel h-100" aria-labelledby="where-title">
+        <h2 class="panel-title" id="where-title">Where it is</h2>
+        <div id="map" class="map" data-mode="view" role="img" aria-label="Map showing where the problem is"
+             data-lat="{{ report.latitude }}" data-lng="{{ report.longitude }}" data-zoom="16"></div>
+        <div class="map-tools">
+          <span class="pin-status">{{ '%.5f'|format(report.latitude) }}, {{ '%.5f'|format(report.longitude) }}</span>
+          <a class="small fw-bold" href="https://www.openstreetmap.org/?mlat={{ report.latitude }}&amp;mlon={{ report.longitude }}#map=18/{{ report.latitude }}/{{ report.longitude }}" target="_blank" rel="noopener">Open in a map app</a>
+        </div>
+      </section>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro empty_state(title, text, action_url=None, action_label=None) %}
+  <div class="empty">
+    <h2 class="empty-title">{{ title }}</h2>
+    <p>{{ text }}</p>
+    {% if action_url %}<a class="btn btn-mtaa" href="{{ action_url }}">{{ action_label }}</a>{% endif %}
+  </div>
+{% endmacro %}
+
+{% macro back(url, label) -%}
+  <a class="back-link" href="{{ url }}">{{ icon('back') }}{{ label }}</a>
+{%- endmacro %}
+
+{% macro leaflet_head() %}
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+{% endmacro %}
+
+{% macro leaflet_scripts() %}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endmacro %}
+
+{% macro pager(page, endpoint) %}
+  {% if page.pages > 1 %}
+    <nav aria-label="Pages" class="mt-3"><ul class="pagination">
+      {% for n in page.iter_pages() %}
+        {% if n %}
+          {% set args = request.args.to_dict() %}{% set _ = args.update({'page': n}) %}
+          <li class="page-item {% if n == page.page %}active{% endif %}"><a class="page-link" href="{{ url_for(endpoint, **args) }}" {% if n == page.page %}aria-current="page"{% endif %}>{{ n }}</a></li>
+        {% else %}<li class="page-item disabled"><span class="page-link">…</span></li>{% endif %}
+      {% endfor %}
+    </ul></nav>
+  {% endif %}
+{% endmacro %}

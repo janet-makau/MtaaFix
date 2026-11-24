@@ -1,0 +1,101 @@
+id,language,category,priority,duplicate_group,latitude,longitude,description
+T001,en,Roads,High,D01,-1.282600,36.746600,Large pothole in the middle of the road at the Kawangware stage. Matatus swerve into oncoming traffic to avoid it.
+T002,sw,Roads,High,D01,-1.282313,36.746995,Shimo kubwa katikati ya barabara karibu na stage ya Kawangware. Matatu zinaingia upande mwingine kulikwepa.
+T003,en,Street Lighting,Medium,D02,-1.283300,36.896000,Street lights along the road from Umoja market to the estate have been off for a week. It is very dark at night.
+T004,mixed,Street Lighting,Medium,D02,-1.282995,36.896431,"Taa za barabarani from Umoja market hadi estate hazijawaka for one week, ni giza sana usiku."
+T005,en,Drainage,High,D03,-1.312000,36.835000,Blocked drain next to the primary school gate in South B floods the road every time it rains. Children walk through dirty water.
+T006,en,Drainage,High,D03,-1.311677,36.835467,The storm drain by the school gate is full of rubbish and the road floods whenever it rains.
+T007,en,Water Supply,High,D04,-1.276000,36.911000,Burst water pipe at the junction near the chemist in Kayole. Clean water has been flowing on the road for two days.
+T008,sw,Water Supply,High,D04,-1.275659,36.911503,Bomba la maji limepasuka kwenye makutano karibu na duka la dawa Kayole. Maji safi yanamwagika barabarani siku mbili sasa.
+T009,en,Waste Collection,Medium,D05,-1.201000,36.912000,Garbage at the estate collection point in Githurai 45 has not been collected for over a week and is spilling onto the footpath.
+T010,mixed,Waste Collection,Medium,D05,-1.200641,36.912539,"Takataka kwa collection point ya estate Githurai 45 haijaokotwa wiki nzima, sasa inamwagika kwa footpath."
+T011,en,Roads,Medium,D06,-1.249000,36.900000,The speed bump outside the health centre in Dandora has broken up and loose stones are scattered on the road.
+T012,en,Roads,Medium,D06,-1.248623,36.900575,"Broken speed bump near the dispensary, there are stones all over the road."
+T013,en,Street Lighting,High,D07,-1.313000,36.787000,The high mast floodlight near the Kibera footbridge is not working. People are afraid to cross at night.
+T014,sw,Street Lighting,High,D07,-1.312605,36.787611,Taa kubwa ya mlingoti karibu na daraja la Kibera haiwaki. Watu wanaogopa kuvuka usiku.
+T015,en,Drainage,Medium,D08,-1.223000,36.899000,The open drain along the road in Kasarani is overflowing with dirty water and the smell is very bad.
+T016,mixed,Drainage,Medium,D08,-1.222587,36.899647,"Mtaro wa Kasarani ume-overflow na maji machafu, harufu ni mbaya sana."
+T017,en,Water Supply,Medium,D09,-1.320000,36.900000,No water in the taps in our part of Embakasi for four days.
+T018,en,Water Supply,Medium,D09,-1.319569,36.900683,The estate has had no tap water since Monday. Residents are buying water from vendors.
+T019,en,Waste Collection,Medium,D10,-1.205000,36.779000,Rubbish is being dumped on the empty plot next to Ruaka market and it is burned at night.
+T020,en,Waste Collection,Medium,D10,-1.204551,36.779719,People keep dumping and burning garbage on the open plot beside the market.
+T021,en,Roads,Low,D11,-1.300000,36.780000,The zebra crossing outside the supermarket on Ngong Road has faded and drivers do not see it.
+T022,en,Roads,Low,D11,-1.299533,36.780755,Pedestrian crossing paint near the supermarket has worn off.
+T023,en,Other,Medium,D12,-1.267000,36.811000,A large tree branch has fallen and blocks half of the footpath near the church in Westlands.
+T024,sw,Other,Medium,D12,-1.266515,36.811791,Tawi kubwa la mti limeanguka na kuziba nusu ya njia ya watembea kwa miguu karibu na kanisa Westlands.
+T025,en,Street Lighting,Low,D13,-1.297000,36.889000,One street light near the Donholm bus stop flickers on and off all night.
+T026,en,Street Lighting,Low,D13,-1.296497,36.889827,Flickering street lamp at the bus stop.
+T027,en,Drainage,High,D14,-1.311000,36.908000,A manhole cover is missing on the main road in Pipeline. A motorbike fell into the hole last night.
+T028,sw,Drainage,High,D14,-1.310479,36.908863,Kifuniko cha shimo la maji taka hakipo kwenye barabara kuu Pipeline. Pikipiki ilianguka ndani jana usiku.
+T029,en,Roads,Medium,D15,-1.212000,36.890000,The road to the estate behind Zimmerman market has deep gullies after the rains and cars cannot pass.
+T030,mixed,Roads,Medium,D15,-1.211461,36.890899,"Barabara ya kwenda estate nyuma ya Zimmerman market imeharibika sana baada ya mvua, magari haziwezi pita."
+T031,en,Water Supply,Low,D16,-1.185000,36.925000,The communal water tap at the market leaks slowly all day and water is being wasted.
+T032,en,Water Supply,Low,D16,-1.184443,36.925934,The public tap at the market drips all day.
+T033,en,Waste Collection,Low,D17,-1.341000,36.759000,The litter bins in the small park are full.
+T034,en,Waste Collection,Low,D17,-1.340425,36.759970,Bins at the park are overflowing.
+T035,en,Roads,High,D18,-1.322000,36.825000,"Part of the road next to the bridge in South C has collapsed, leaving a deep hole at the edge."
+T036,en,Roads,High,D18,-1.321407,36.826006,The road beside the bridge has caved in on one side.
+T037,en,Street Lighting,Medium,D19,-1.290000,36.850000,Street lights on Jogoo Road near the stage are off.
+T038,sw,Street Lighting,Medium,D19,-1.289389,36.851042,Taa za barabarani kwenye Jogoo Road karibu na stage hazifanyi kazi.
+T039,en,Drainage,Low,D20,-1.274000,36.851000,The culvert near the estate gate is partly blocked with soil.
+T040,mixed,Drainage,Low,D20,-1.273371,36.852078,Culvert iko blocked na udongo karibu na gate ya estate.
+T041,en,Other,Medium,D21,-1.260000,36.859000,Part of the railing on the footbridge over the river in Mathare is missing.
+T042,en,Other,Medium,D21,-1.259353,36.860114,The handrail on the Mathare footbridge is broken.
+T043,en,Water Supply,High,D22,-1.274000,36.824000,A water meter pit beside the footpath has been left open and someone could fall in.
+T044,en,Water Supply,High,D22,-1.273335,36.825150,Open water meter chamber next to the footpath with no cover.
+T045,en,Roads,Low,,-1.282061,36.745791,The road sign at the Kawangware junction has been knocked down.
+T046,en,Street Lighting,Low,,-1.283929,36.896719,The security light at the market toilet block is not working.
+T047,en,Drainage,Medium,,-1.312988,36.834461,Broken drain cover outside the shops on the next street.
+T048,sw,Water Supply,Low,,-1.275551,36.911988,Maji yanatoka kwa nguvu kidogo sana kwenye nyumba za ghorofa.
+T049,en,Waste Collection,Low,,-1.200641,36.910922,There are no litter bins at the matatu stage.
+T050,en,Roads,Medium,,-1.320922,36.825629,Several small potholes along the service lane behind the flats.
+T051,en,Street Lighting,Medium,,-1.290359,36.849101,Street light pole leaning dangerously after a car hit it.
+T052,mixed,Drainage,Medium,,-1.312168,36.908539,Mtaro wa kando ya barabara umejaa plastic bags na haupitishi maji.
+T053,en,Roads,High,,-1.271144,36.749594,Deep pothole on the Kangemi bypass at the bend. Two cars have burst tyres this week.
+T054,en,Roads,Medium,,-1.281144,36.772594,Edges of the tarmac are breaking off along the road to the shopping centre.
+T055,sw,Roads,Medium,,-1.293144,36.731594,Barabara ya Riruta ina mashimo mengi tangu mvua ianze.
+T056,en,Roads,Low,,-1.293144,36.788594,Road markings at the roundabout are faded.
+T057,mixed,Roads,High,,-1.299144,36.717594,"Bridge ya Dagoretti imeanza kuvunjika upande mmoja, magari makubwa bado yanapita."
+T058,en,Roads,Medium,,-1.234144,36.785594,Gravel road to the estate is badly eroded and very dusty.
+T059,en,Roads,Low,,-1.290144,36.879594,Loose kerb stones along the walkway outside the shops.
+T060,sw,Roads,Medium,,-1.219144,36.948594,Barabara ya Mwiki imejaa matope na watu hawawezi kutembea.
+T061,en,Street Lighting,Medium,,-1.293144,36.965594,Street lights on the main road in Utawala go off every evening around 9 pm.
+T062,en,Street Lighting,Low,,-1.322144,36.711594,One lamp on the shopping centre car park is not working.
+T063,sw,Street Lighting,High,,-1.307144,36.796594,Nguzo ya taa imeanguka na waya za umeme ziko chini kando ya njia.
+T064,en,Street Lighting,Medium,,-1.298144,36.872594,The whole street behind the market has had no lighting for two weeks.
+T065,mixed,Street Lighting,Medium,,-1.281144,36.841594,Taa za street karibu na Kariokor market zimezimika tangu last week.
+T066,en,Street Lighting,Low,,-1.248144,36.838594,Street light stays on during the day.
+T067,en,Street Lighting,Medium,,-1.236144,36.804594,"Dark stretch of road between the stage and the estate, lights broken."
+T068,en,Drainage,High,,-1.233144,36.883594,The main storm drain on the estate road is completely blocked and houses flood when it rains.
+T069,sw,Drainage,Medium,,-1.211144,36.881594,Mtaro umeziba kwa takataka na maji yanatuama barabarani.
+T070,en,Drainage,Low,,-1.246144,36.889594,Grass and weeds growing in the roadside drain.
+T071,mixed,Drainage,High,,-1.241144,36.899594,Maji ya mvua yanaingia kwa nyumba because mtaro umeziba completely.
+T072,en,Drainage,Medium,,-1.271144,36.918594,Sewage is leaking from a manhole onto the footpath.
+T073,en,Drainage,Low,,-1.267144,36.936594,Small puddle forms at the gate after rain because the drain is shallow.
+T074,en,Drainage,Medium,,-1.259144,36.951594,Drainage channel collapsed along the road and the water now runs on the tarmac.
+T075,en,Water Supply,High,,-1.273144,37.013594,"Main water pipe burst along the road, the whole area has no water and the road is flooding."
+T076,sw,Water Supply,Medium,,-1.360144,36.933594,Hatujapata maji kwa mabomba wiki nzima.
+T077,en,Water Supply,Low,,-1.395144,36.945594,Water from the taps is slightly brown in the mornings.
+T078,mixed,Water Supply,Medium,,-1.353144,36.893594,"Maji yanakuja once a week tu, na pressure iko chini sana."
+T079,en,Water Supply,Medium,,-1.318144,36.767594,Leaking valve on the water main next to the shops.
+T080,en,Water Supply,Low,,-1.305144,36.773594,The water kiosk tap is broken and drips.
+T081,en,Water Supply,High,,-1.311144,36.781594,"Sewage appears to be mixing with the water supply, the tap water smells bad."
+T082,en,Waste Collection,High,,-1.298144,36.736594,A huge pile of uncollected rubbish is blocking the road and attracting rats near the school.
+T083,sw,Waste Collection,Medium,,-1.281144,36.723594,Takataka hazijaokotwa kwa wiki mbili kwenye eneo letu.
+T084,en,Waste Collection,Low,,-1.257144,36.884594,Some litter around the bus stop.
+T085,mixed,Waste Collection,Medium,,-1.259144,36.874594,"Garbage truck haijakuja for two weeks, takataka zimejaa kila mahali."
+T086,en,Waste Collection,Medium,,-1.222144,36.887594,"Overflowing skip at the market, rubbish spreading onto the road."
+T087,en,Waste Collection,Low,,-1.322144,36.883594,The recycling bins at the estate are full.
+T088,sw,Waste Collection,High,,-1.273144,36.993594,Takataka zinachomwa karibu na shule na moshi unaingia madarasani.
+T089,en,Waste Collection,Medium,,-1.277144,36.854594,Rubbish dumped in the river channel near the bridge.
+T090,en,Other,Medium,,-1.263144,36.823594,"Damaged bus shelter roof, sheets hanging loose."
+T091,en,Other,High,,-1.273144,36.993594,An electricity cable is hanging low across the footpath near the market.
+T092,en,Other,Low,,-1.322144,36.711594,Public bench in the park is broken.
+T093,sw,Other,Medium,,-1.234144,36.785594,Mti umeanguka kando ya barabara na umeziba sehemu ya barabara.
+T094,en,Other,Low,,-1.281144,36.772594,Graffiti on the wall of the public toilet.
+T095,mixed,Other,Medium,,-1.275144,36.933594,Signboard ya barabara imeanguka na iko kando ya road.
+T096,en,Other,High,,-1.293144,36.965594,Stray dogs are gathering at the dumpsite and chasing children on the way to school.
+T097,en,Roads,Medium,,-1.246144,36.889594,Potholes forming at the entrance to the estate road.
+T098,en,Street Lighting,Low,,-1.267144,36.936594,Two street lights along the bypass are dim.
+T099,en,Drainage,Medium,,-1.271144,36.918594,Water collects in the dip of the road after every rain because there is no drain.
+T100,sw,Roads,Low,,-1.273144,37.013594,Kibao cha kupunguza mwendo karibu na shule kimefifia.

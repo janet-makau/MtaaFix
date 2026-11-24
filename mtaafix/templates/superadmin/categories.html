@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "partials/macros.html" import field with context %}
+{% block title %}Categories{% endblock %}
+{% block content %}
+<div class="narrow">
+  <h1 class="page-title">Report categories</h1>
+  <p class="page-lead">Residents choose from these when they report a problem. A deactivated category is no longer offered, but stays on existing reports.</p>
+
+  <section class="panel mb-4" aria-labelledby="add-title">
+    <h2 class="panel-title" id="add-title">Add a category</h2>
+    <form class="row g-2 align-items-start" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="col-sm-8">{{ field(form.name) }}</div>
+      <div class="col-sm-4 pt-sm-4 mt-sm-2"><button class="btn btn-mtaa w-100" type="submit">Add category</button></div>
+    </form>
+  </section>
+
+  <div class="table-wrap"><div class="table-responsive">
+  <table class="table align-middle">
+    <caption class="visually-hidden">Categories</caption>
+    <thead><tr><th scope="col">Name</th><th scope="col">Shown to residents</th><th scope="col" class="text-end">Action</th></tr></thead>
+    <tbody>
+    {% for c in categories %}
+      <tr class="{{ 'text-muted' if not c.active }}">
+        <td>
+          <form class="d-flex gap-1" method="post" action="{{ url_for('superadmin.rename_category', category_id=c.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input class="form-control form-control-sm" name="name" value="{{ c.name }}" maxlength="60" required aria-label="Name for {{ c.name }}">
+            <button class="btn btn-sm btn-quiet" type="submit">Rename<span class="visually-hidden"> {{ c.name }}</span></button>
+          </form>
+        </td>
+        <td><span class="status {{ 'status-resolved' if c.active else 'status-closed' }}">{{ "Yes" if c.active else "No" }}</span></td>
+        <td class="text-end">
+          <form method="post" action="{{ url_for('superadmin.toggle_category', category_id=c.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm {{ 'btn-danger-quiet' if c.active else 'btn-quiet' }}" type="submit">
+              {{ "Deactivate" if c.active else "Reactivate" }}<span class="visually-hidden"> {{ c.name }}</span></button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div></div>
+</div>
+{% endblock %}
